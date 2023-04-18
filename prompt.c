@@ -5,14 +5,15 @@
 #include <sys/wait.h>
 #include <string.h>
 #include <errno.h>
+#include "main.h"
 
 /**
- * main - gets command and executes it
+ * run_shell- gets command and executes it
  *
  * Return: 0
  */
 
-int main(void)
+int run_shell(void)
 {
 	char *temp = NULL;
 	size_t len = 0;
