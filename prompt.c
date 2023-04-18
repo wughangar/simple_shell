@@ -12,7 +12,10 @@
  *
  * Return: 0
  */
-
+int main(void)
+{
+	return run_shell();
+}
 int run_shell(void)
 {
 	char *temp = NULL;
