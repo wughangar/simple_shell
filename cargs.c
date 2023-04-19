@@ -9,6 +9,23 @@
  * Return: o
  */
 
+char *find_path(char *arg, char *path)
+{
+	char *fpath = NULL;
+	char *dir = strtok(path, ":");
+	while (dir != NULL)
+	{
+		fpath = malloc(strlen(dir) + strlen(arg) + 2);
+		sprintf(fpath, "%s/%s", dir, arg);
+		if (access(fpath, X_OK) == 0)
+		{
+			return (fpath);
+		}
+		free(fpath);
+		dir = strtok(NULL, ":");
+	}
+	return (NULL);
+}
 int main(void)
 {
 	char *temp = NULL;
@@ -40,12 +57,14 @@ int main(void)
 		}
 		args[i] = NULL;
 
-		if (access(args[0], X_OK)==0)
+		char *cpath = find_path(args[0], cpath);
+
+		if (cpath != NULL)
 		{
 			pid = fork();
 			if (pid == 0)
 			{
-				execve(args[0], args, NULL);
+				execve(cpath, args, NULL);
 				perror("execve process failed");
 				exit(EXIT_FAILURE);
 			}
