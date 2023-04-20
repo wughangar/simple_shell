@@ -32,6 +32,11 @@ int main(__attribute__((unused))int ac, __attribute__((unused))char **av, char *
 	
 
 	temp[strcspn(temp, "\n")] = '\0';
+
+	if(strcmp(temp, "exit") == 0)
+	{
+		break;
+	}
 	
 
 	tok = strtok(temp, " ");
