@@ -18,7 +18,7 @@ int main(__attribute__((unused))int ac, __attribute__((unused))char **av, char *
 	pid_t pid;
 	char *tok;
 	int i = 0;
-
+	char **j;
 	temp = (char *) malloc(len + 1);
 	if (temp == NULL)
 		exit(1);
@@ -37,7 +37,13 @@ int main(__attribute__((unused))int ac, __attribute__((unused))char **av, char *
 	{
 		break;
 	}
-	
+
+	if (strcmp(temp, "env") == 0)
+	{
+		for (j = envp; *j != NULL; j++)
+			printf("%s\n", *j);
+		continue;
+	}
 
 	tok = strtok(temp, " ");
 	while (tok != NULL && i < 1023)
