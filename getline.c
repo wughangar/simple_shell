@@ -3,28 +3,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
-
-ssize_t _getline(char **lineptr, size_t *n, int fd);
-
-/**
- * main - entry point
- * Return: 0
- */
-int main()
-{
-        char *line = NULL;
-        size_t buffer_size = 0;
-        int fd;
-        fd = open("text.txt", O_RDONLY);
-        if (fd == -1)
-                return (-1);
-
-        _getline(&line, &buffer_size, fd);
-        printf("%s\n", line);
-        free(line);
-        close(fd);
-        return (0);
-}
+#include "main.h"
 
 /**
  * _getline - Accepts a string from input steam as an input
@@ -33,18 +12,22 @@ int main()
  * @fd: stdin
  * Return: number of characters read
  */
-ssize_t _getline(char **lineptr, size_t *n, int fd)
+ssize_t _getline(char **lineptr, size_t *n, FILE *stream)
 {
         ssize_t buffer_size = 128;
         ssize_t curr_pos = 0;
         int c;
 
-        if (lineptr == NULL || n == NULL || fd < 0)
+        if (lineptr == NULL || n == NULL || stream == NULL)
                 return (-1);
         *lineptr = malloc(buffer_size);
         if (*lineptr == NULL)
                 return (-1);
-        while ((read(fd, &c, 1)) > 0)
+	c = fgetc(stream);
+	/*if (read_result < 0)
+		return (-1); */
+
+        while (c != EOF)
         {
                 if (curr_pos >= buffer_size)
                 {

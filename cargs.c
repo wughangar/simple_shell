@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <string.h>
+#include "main.h"
 /**
  * find_path - gets the full path a command
  * @arg: pointer to the command
