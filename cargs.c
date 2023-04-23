@@ -44,7 +44,6 @@ int main(int argc, char **argv, char **envp)
 	
 	if (getline(&temp, &len, stdin) == -1)
 		break;
-	
 
 	temp[strcspn(temp, "\n")] = '\0';
 	
