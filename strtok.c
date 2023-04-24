@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 /**
  * _strtok - extracts tokens from strings
  * @str: pointer to the string being tokenized
@@ -8,19 +9,27 @@
 
 char *_strtok(char *str, const char *delim)
 {
-	int i = 0, j, k;
-	
-	while (str[i] != '\0')
+	static char *ltoken = NULL;
+	char *tstart, *tend;
+
+	if (str == NULL)
+		str = ltoken;
+
+	str += strspn(str, delim);
+	if (*str == '\0')
+		return (NULL);
+
+	tstart = str;
+	tend = strpbrk(tstart, delim);
+	if (tend == NULL)
 	{
-		while (str[i] == ' ')
-			i++;
-		j = i;
-		while (str[j] != ' ' && str[j] != '\0')
-			j++;
-		if (i != j)
-		{
-			for (k = i; k < j; k++)
-				return(*str[k]);
-		}
+		ltoken = strchr(tstart, '\0');
 	}
+	else
+	{
+		*tend = '\0';
+		ltoken = tend + 1;
+	}
+
+	return (tstart);
 }

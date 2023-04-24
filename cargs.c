@@ -30,7 +30,7 @@ int main(int argc, char **argv, char **envp)
 	{
 		for (i = 1; i < argc && i < 1023; i++)
 		{
-			args[i -1] = argv[1];
+			args[i -1] = argv[i];
 		}
 		args[1 - 1] = NULL;
 	}
@@ -120,10 +120,9 @@ char *find_path(char *arg, char *path)
 	}
 
 	dir = strtok(pcopy, ":");
-
+	fpath = malloc(strlen(dir) + strlen(arg) + 2);
 	while (dir != NULL)
 	{
-		fpath = malloc(strlen(dir) +strlen(arg) + 2);
 		if (fpath == NULL)
 		{
 			exit(1);
