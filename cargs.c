@@ -42,7 +42,7 @@ int main(int argc, char **argv, char **envp)
 	{
 	printf("$ ");
 	
-	if (_getline(&temp, &len, stdin) == -1)
+	if (getline(&temp, &len, stdin) == -1)
 		break;
 
 	temp[strcspn(temp, "\n")] = '\0';

@@ -14,53 +14,55 @@
  */
 ssize_t _getline(char **lineptr, size_t *n, FILE *stream)
 {
-	static char buffer[1024];
+	const size_t init_alloc = 16;
+	const size_t alloc_step = 16;
 	size_t curr_pos = 0;
-	ssize_t read_result = 0;
-	char *new_ptr = NULL;
-	char c;
+	size_t size_max = 1;
+	int c;
+	char *tmp;
+
 
 	if (lineptr == NULL || n == NULL || stream == NULL)
 		return (-1);
-	while (1)
+	if (*lineptr == NULL)
 	{
-		/* read stream using fileno char by char */
-		read_result = read(fileno(stream), &c, 1);
-		if (read_result < 0)
-		{
-			perror("Error reading input stream");
+		*lineptr = malloc(init_alloc);
+		if (*lineptr == NULL)
 			return (-1);
-		} else if (read_result == 0)
-			break;
-		if (curr_pos >= *n - 1)
+		else
+			*n = init_alloc;
+	}
+	{
+		while ((c = getc(stream)) != EOF)
 		{
-			/* increase array size by 2 and allocate memory */
-			*n *= 2;
-			new_ptr = realloc(*lineptr, *n);
-			if (!new_ptr)
+			curr_pos++;
+			if (curr_pos >= *n)
 			{
-				free(*lineptr);
-				return (-1);
+				size_t n_realloc = *n + alloc_step;
+				tmp = realloc(*lineptr, n_realloc + 1);
+				if (tmp != NULL)
+				{
+					*lineptr = tmp;
+					*n = n_realloc;
+				}
+				else
+					return (-1);
+				if (size_max < *n)
+				{
+					perror("Error\n");
+					return (-1);
+				}
 			}
-			*lineptr = new_ptr;
+			(*lineptr)[curr_pos - 1] = (char) c;
+			if (c == '\n')
+				break;
 		}
-		buffer[curr_pos++] = c;
-		if (c == '\n')
+		if (c == EOF)
 		{
-			/* null terminate the array */
-			buffer[curr_pos] = '\0';
-			*lineptr = realloc(*lineptr, curr_pos + 1);
-			if (*lineptr == NULL)
-			{
-				free(new_ptr);
-				return (-1);
-			}
-			/* copy curr_pos to *lineptr */
-			memcpy(*lineptr, buffer, curr_pos + 1);
-			return (curr_pos);
+			perror("Error");
+			return (-1);
 		}
 	}
-	if (curr_pos == 0)
-		return (-1);
-	return (curr_pos);
+	(*lineptr)[curr_pos] = '\0';
+	return ((ssize_t) curr_pos);
 }
