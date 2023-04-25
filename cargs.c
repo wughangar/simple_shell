@@ -136,9 +136,9 @@ char *find_path(char *arg, char *path)
 			return (fpath);
 		}
 
-		free(fpath);
 		dir = strtok(NULL, ":");
 	}
+	free(fpath);
 	free(pcopy);
 	return (NULL);
 }
