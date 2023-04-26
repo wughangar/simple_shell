@@ -33,81 +33,99 @@ int main(int argc, char **argv, char **envp)
 	{
 		for (i = 1; i < argc && i < 1023; i++)
 		{
-			args[i - 1] = argv[i];
+			args[i -1] = argv[i];
 		}
-		args[1 - 1] = NULL;
+		args[i-1] = NULL;
 	}
-		temp = (char *)malloc(len + 1);
-		if (temp == NULL)
-		{
-			perror("memory allocation error");
-			exit(1);
-		}
+
+	temp = (char *)malloc(len + 1);
+	if (temp == NULL)
+	{
+		perror("memory allocation error");
+		exit(1);
+	}
 
 	while (1)
 	{
-	printf("$ ");
+		printf("$ ");
 
-	if (getline(&temp, &len, stdin) == -1)
-		break;
-
-	temp[strcspn(temp, "\n")] = '\0';
-
-
-	if (my_strcmp(temp, "exit") == 0)
-
-		break;
-
-	if (my_strcmp(temp, "env") == 0)
-	{
-
-		for (j = 0; envp[j] != NULL; j++)
-			printf("%s\n", envp[j]);
-	continue;
-	}
-
-	commands =  strtok(temp, ";");
-
-	while (commands != NULL)
-	{
-	tok = strtok(commands, " ");
-	i = 0;
-	while (tok != NULL && i < 1023)
-	{
-		args[i++] = tok;
-		tok = strtok(NULL, " ");
-	}
-	args[i] = NULL;
-
-	if (i > 0 && strcmp(args[i - 1], "-") == 0 && i < 1023)
-	{
-		args[i - 1] = NULL;
-		fp = freopen(args[i - 2], "r", stdin);
-		if (fp == NULL)
+		if (getline(&temp, &len, stdin) == -1)
 		{
-			printf("Error opening file\n");
+			printf("\n");
+			break;
+		}
+		temp[strcspn(temp, "\n")] = '\0';
+
+		if (my_strcmp(temp, "\n") == 0)
+			continue;
+
+		if (my_strcmp(temp, "exit") == 0)
+			break;
+
+		if (my_strcmp(temp, "env") == 0)
+		{
+			for (j = 0; envp[j] != NULL; j++)
+				printf("%s\n", envp[j]);
 			continue;
 		}
-	}
 
-	cpath = getenv("PATH");
-	cpath = find_path(args[0], cpath);
+		commands = strtok(temp, ";");
 
-	if (cpath == NULL)
-	{
-		printf("%s: command not found\n", args[0]);
-		commands = strtok(NULL, ";");
-		continue;
-	}
+		while (commands != NULL)
+		{
+			tok = strtok(commands, " ");
+			i = 0;
 
-	pid = fork();
-	if (pid == 0)
-		execve(cpath, args, envp);
-	else
-		wait(NULL);
-	commands = strtok(NULL, ";");
+			while (tok!= NULL && i < 1023)
+			{
+				args[i++] = tok;
+				tok = strtok(NULL, " ");
+			}
+			args[i] = NULL;
+
+			if (i > 0 && my_strcmp(args[i - 1], "-") == 0 && i < 1023)
+			{
+				args[i - 1] = NULL;
+				fp = freopen(args[i - 2], "r", stdin);
+				if (fp == NULL)
+				{
+					printf("Error opening file\n");
+					continue;
+				}
+			}
+
+			cpath = getenv("PATH");
+			cpath = find_path(args[0], cpath);
+
+			if (cpath == NULL)
+			{
+				printf("%s: command not found\n", args[0]);
+				commands = strtok(NULL, ";");
+				continue;
+			}
+
+			pid = fork();
+			if (pid == 0)
+			{
+				if (execve(cpath, args, envp) == -1)
+				{
+					perror("execve failed");
+					exit(EXIT_FAILURE);
+				}
+			}
+			else if (pid < 0)
+			{
+				perror("fork failed");
+			}
+			else
+			{
+				wait(NULL);
+			}
+
+			commands = strtok(NULL, ";");
+		}
 	}
-	}
+	free(temp);
 	return (0);
 }
 
@@ -124,6 +142,10 @@ int my_strcmp(const char *s1, const char *s2)
 	{
 		s1++;
 		s2++;
+	}
+	if (*s1 == '\0' && *s2 == '\0')
+	{
+		return (0);
 	}
 	return (*(const unsigned char *)s1 - *(const unsigned char *)s2);
 }
@@ -149,9 +171,9 @@ char *find_path(char *arg, char *path)
 	}
 
 	dir = strtok(pcopy, ":");
-	fpath = malloc(strlen(dir) + strlen(arg) + 2);
 	while (dir != NULL)
 	{
+		fpath = malloc(strlen(dir) + strlen(arg) + 2);
 		if (fpath == NULL)
 		{
 			exit(1);
@@ -165,9 +187,9 @@ char *find_path(char *arg, char *path)
 			return (fpath);
 		}
 
+		free(fpath);
 		dir = strtok(NULL, ":");
 	}
-	free(fpath);
 	free(pcopy);
 	return (NULL);
 }
