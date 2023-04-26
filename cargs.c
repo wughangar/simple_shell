@@ -40,9 +40,7 @@ int main(int argc, char **argv, char **envp)
 
 	execve("/bin/sh", argv, envp);
 
-	perror("execve");
-	return (1);
-	
+	perror("execve");	
 	
 	if (argc > 1)
 	{
