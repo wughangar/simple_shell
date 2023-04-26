@@ -165,28 +165,41 @@ int my_strcmp(const char *s1, const char *s2)
 	return (*(const unsigned char *)s1 - *(const unsigned char *)s2);
 }
 
-char *strdup(const char *s)
+char *_strdup(char *str)
 {
-	size_t len = strlen(s);
-	char *copy = malloc(len+1);
-	if (copy == NULL)
-	{
+	int len = 0;
+	char *nstr;
+	int i;
+
+	if (!str)
 		return (NULL);
-	}
-	memcpy(copy, s, len +1);
-	return (copy);
+	while (str[len])
+		len++;
+
+	nstr = malloc(sizeof(char) * (len + 1));
+
+	if (!nstr)
+		return (NULL);
+
+	for (i = 0; i < len; i++)
+		nstr[i] = str[i];
+
+	nstr[len] = '\0';
+
+	return(nstr);
 }
 
-char *strdup(const char *s);
+char *_strdup(char *str);
 char *find_path(char *arg, char *path)
 {
 	char *fpath = NULL;
 	char *dir = NULL;
 	char *pcopy = NULL;
 
-	pcopy = strdup(path);
+	pcopy = _strdup(path);
 	if (pcopy == NULL)
 	{
+		perror("strdup failed");
 		exit(1);
 	}
 
@@ -196,12 +209,13 @@ char *find_path(char *arg, char *path)
 		fpath = malloc(strlen(dir) + strlen(arg) + 2);
 		if (fpath == NULL)
 		{
+			perror("malloc failed");
 			exit(1);
 		}
 
 		sprintf(fpath, "%s/%s", dir, arg);
 
-		if (access(fpath, F_OK) == 0)
+		if (access(fpath, F_OK | X_OK) == 0)
 		{
 			free(pcopy);
 			return (fpath);
@@ -212,5 +226,6 @@ char *find_path(char *arg, char *path)
 		dir = strtok(NULL, ":");
 	}
 	free(pcopy);
-	return (NULL);
+	fprintf(stderr, "%s: command not found\n", arg);
+	exit(1);
 }
