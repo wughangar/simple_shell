@@ -13,6 +13,7 @@
  * Return: pointer to the full path
  */
 
+int f_env(char **args);
 char *find_path(char *arg, char *path);
 int my_strcmp(const char *s1, const char *s2);
 
@@ -75,7 +76,7 @@ int main(int argc, char **argv, char **envp)
 		if (my_strcmp(temp, "exit") == 0)
 			break;
 
-		if (my_strcmp(temp, "env") == 0)
+		if (f_env(temp, "env") == 0)
 		{
 			for (j = 0; envp[j] != NULL; j++)
 				printf("%s\n", envp[j]);
@@ -226,4 +227,16 @@ char *find_path(char *arg, char *path)
 	free(pcopy);
 	fprintf(stderr, "%s: command not found\n", arg);
 	exit(1);
+}
+int f_env(char **args)
+{
+	char *evar;
+	int i;
+
+	for (i = 0; environ[i] != NULL; i++)
+	{
+		evar = environ[i];
+		printf("%s\n", evar);
+	}
+	return (1);
 }
