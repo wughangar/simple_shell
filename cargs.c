@@ -28,7 +28,22 @@ int main(int argc, char **argv, char **envp)
 	int i = 0;
 	int j = 0;
 	FILE *fp;
+	char *path;
+	char *new_path;
+	char *prompt = "$ ";
 
+	path = getenv("PATH");
+	new_path = malloc(strlen(path) + strlen("/sbin") + 2);
+	sprintf(new_path, "%s:/bin", path);
+	setenv("PATH", new_path, 1);
+	free(new_path);
+
+	execve("/bin/sh", argv, envp);
+
+	perror("execve");
+	return (1);
+	
+	
 	if (argc > 1)
 	{
 		for (i = 1; i < argc && i < 1023; i++)
@@ -47,7 +62,7 @@ int main(int argc, char **argv, char **envp)
 
 	while (1)
 	{
-		printf("$ ");
+		printf("%s ", prompt);
 
 		if (getline(&temp, &len, stdin) == -1)
 		{
