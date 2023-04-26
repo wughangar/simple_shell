@@ -5,9 +5,10 @@
 #include <string.h>
 #include "main.h"
 /**
- * find_path - gets the full path a command
- * @arg: pointer to the command
- * @path: pointer to the path
+ * main - unix command line interpreter
+ * @arg: pointer to arguments to find path for
+ * @path: pointer to path
+ *
  * Return: pointer to the full path
  */
 
@@ -18,7 +19,7 @@ int main(int argc, char **argv, char **envp)
 	char *args[1024];
 	char *temp = NULL;
 	char *commands = NULL;
-        char *cpath = NULL;
+	char *cpath = NULL;
 	char *tok = NULL;
 	size_t len = 0;
 	pid_t pid;
@@ -30,7 +31,7 @@ int main(int argc, char **argv, char **envp)
 	{
 		for (i = 1; i < argc && i < 1023; i++)
 		{
-			args[i -1] = argv[i];
+			args[i - 1] = argv[i];
 		}
 		args[1 - 1] = NULL;
 	}
@@ -41,20 +42,20 @@ int main(int argc, char **argv, char **envp)
 	while (1)
 	{
 	printf("$ ");
-	
+
 	if (getline(&temp, &len, stdin) == -1)
 		break;
 
 	temp[strcspn(temp, "\n")] = '\0';
-	
 
-	if(strcmp(temp, "exit") == 0)
-	
+
+	if (strcmp(temp, "exit") == 0)
+
 		break;
 
 	if (strcmp(temp, "env") == 0)
 	{
-	
+
 		for (j = 0; envp[j] != NULL; j++)
 			printf("%s\n", envp[j]);
 	continue;
@@ -73,9 +74,9 @@ int main(int argc, char **argv, char **envp)
 	}
 	args[i] = NULL;
 
-	if (i > 0 && strcmp(args[i -1], "-") == 0 && i < 1023)
+	if (i > 0 && strcmp(args[i - 1], "-") == 0 && i < 1023)
 	{
-		args[i -1] = NULL;
+		args[i - 1] = NULL;
 		fp = freopen(args[i - 2], "r", stdin);
 		if (fp == NULL)
 		{
@@ -103,18 +104,24 @@ int main(int argc, char **argv, char **envp)
 	}
 }
 	free(temp);
-	return(0);
+	return (0);
 }
-
+/**
+ * find_path - finds the path
+ * @arg: pointer arguments
+ * @path: pointer to path
+ *
+ * Return: path
+ */
 
 char *find_path(char *arg, char *path)
 {
 	char *fpath = NULL;
-	char *dir =NULL;
+	char *dir = NULL;
 	char *pcopy = NULL;
 
 	pcopy = strdup(path);
-	if(pcopy == NULL)
+	if (pcopy == NULL)
 	{
 		exit(1);
 	}
