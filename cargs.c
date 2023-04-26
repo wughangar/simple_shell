@@ -13,7 +13,7 @@
  * Return: pointer to the full path
  */
 
-int f_env(char **args);
+int f_env(void);
 char *find_path(char *arg, char *path);
 int my_strcmp(const char *s1, const char *s2);
 
@@ -228,7 +228,8 @@ char *find_path(char *arg, char *path)
 	fprintf(stderr, "%s: command not found\n", arg);
 	exit(1);
 }
-int f_env(char **args)
+extern char **environ;
+int f_env(void)
 {
 	char *evar;
 	int i;
