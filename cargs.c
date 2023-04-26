@@ -13,6 +13,7 @@
  */
 
 char *find_path(char *arg, char *path);
+int my_strcmp(const char *s1, const char *s2);
 
 int main(int argc, char **argv, char **envp)
 {
@@ -49,11 +50,11 @@ int main(int argc, char **argv, char **envp)
 	temp[strcspn(temp, "\n")] = '\0';
 
 
-	if (strcmp(temp, "exit") == 0)
+	if (my_strcmp(temp, "exit") == 0)
 
 		break;
 
-	if (strcmp(temp, "env") == 0)
+	if (my_strcmp(temp, "env") == 0)
 	{
 
 		for (j = 0; envp[j] != NULL; j++)
@@ -106,6 +107,16 @@ int main(int argc, char **argv, char **envp)
 	free(temp);
 	return (0);
 }
+int my_strcmp(const char *s1, const char *s2)
+{
+	while (*s1 && (*s1 == *s2))
+	{
+		s1++;
+		s2++;
+	}
+	return (*(const unsigned char *)s1 - *(const unsigned char *)s2);
+}
+
 /**
  * find_path - finds the path
  * @arg: pointer arguments
