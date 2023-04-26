@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <string.h>
-
+#include <stdlib.h>
 
 /**
  * main - unix command line interpreter
@@ -107,10 +107,17 @@ int main(int argc, char **argv, char **envp)
 		wait(NULL);
 	commands = strtok(NULL, ";");
 	}
-}
-	free(temp);
+	}
 	return (0);
 }
+
+/**
+ * my_strcmp - comapres strings
+ * @s1: pointer to first string
+ * @s2: pointer to second string
+ *
+ * Return: 0
+ */
 int my_strcmp(const char *s1, const char *s2)
 {
 	while (*s1 && (*s1 == *s2))
