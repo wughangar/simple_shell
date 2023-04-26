@@ -3,7 +3,8 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <string.h>
-#include "main.h"
+
+
 /**
  * main - unix command line interpreter
  * @arg: pointer to arguments to find path for
@@ -38,7 +39,10 @@ int main(int argc, char **argv, char **envp)
 	}
 		temp = (char *)malloc(len + 1);
 		if (temp == NULL)
+		{
+			perror("memory allocation error");
 			exit(1);
+		}
 
 	while (1)
 	{
