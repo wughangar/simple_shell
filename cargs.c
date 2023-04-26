@@ -69,7 +69,7 @@ int main(int argc, char **argv, char **envp)
 			continue;
 		}
 
-		commands = strtok(temp, ";");
+		commands = strtok(temp, ":");
 
 		while (commands != NULL)
 		{
@@ -150,14 +150,19 @@ int my_strcmp(const char *s1, const char *s2)
 	return (*(const unsigned char *)s1 - *(const unsigned char *)s2);
 }
 
-/**
- * find_path - finds the path
- * @arg: pointer arguments
- * @path: pointer to path
- *
- * Return: path
- */
+char *strdup(const char *s)
+{
+	size_t len = strlen(s);
+	char *copy = malloc(len+1);
+	if (copy == NULL)
+	{
+		return (NULL);
+	}
+	memcpy(copy, s, len +1);
+	return (copy);
+}
 
+char *strdup(const char *s);
 char *find_path(char *arg, char *path)
 {
 	char *fpath = NULL;
@@ -186,6 +191,7 @@ char *find_path(char *arg, char *path)
 			free(pcopy);
 			return (fpath);
 		}
+	
 
 		free(fpath);
 		dir = strtok(NULL, ":");
