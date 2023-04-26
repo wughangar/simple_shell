@@ -13,7 +13,7 @@
  * Return: pointer to the full path
  */
 
-int f_env(char *arg);
+int f_env();
 char *find_path(char *arg, char *path);
 int my_strcmp(const char *s1, const char *s2);
 
@@ -230,15 +230,14 @@ char *find_path(char *arg, char *path)
 	exit(1);
 }
 extern char **environ;
-int f_env(__attribute__((unused))char *arg)
+int f_env()
 {
-	char *evar;
-	int i;
+	char **envp = environ;
 
-	for (i = 0; environ[i] != NULL; i++)
+	while (*envp != NULL)
 	{
-		evar = environ[i];
-		printf("%s\n", evar);
+		printf("%s\n", *envp);
+		envp++;
 	}
-	return (1);
+	return (0);
 }
