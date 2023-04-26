@@ -76,7 +76,7 @@ int main(int argc, char **argv, char **envp)
 		if (my_strcmp(temp, "exit") == 0)
 			break;
 
-		if (f_env(temp, "env") == 0)
+		if (my_strcmp(temp, "env") == 0)
 		{
 			for (j = 0; envp[j] != NULL; j++)
 				printf("%s\n", envp[j]);
