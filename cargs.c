@@ -13,7 +13,7 @@
  * Return: pointer to the full path
  */
 
-int f_env(char *arg);
+void f_env(char *var);
 char *find_path(char *arg, char *path);
 int my_strcmp(const char *s1, const char *s2);
 
@@ -74,15 +74,6 @@ int main(int argc, char **argv, char **envp)
 
 		if (my_strcmp(temp, "exit") == 0)
 			break;
-
-		if (f_env("env") == 0)
-		{
-			printf("Env found\n");
-		}
-		else
-		{
-			printf("enviroment variable not found\n");
-		}
 
 		commands = strtok(temp, ":");
 
@@ -145,7 +136,7 @@ int main(int argc, char **argv, char **envp)
 }
 
 /**
- * my_strcmp - comapres strings
+ * my_strcmp - comapares strings
  * @s1: pointer to first string
  * @s2: pointer to second string
  *
@@ -239,20 +230,15 @@ char *find_path(char *arg, char *path)
 	exit(1);
 }
 extern char **environ;
-/**
- * f_env - sets env variables
- * @arg: pointer to arg
- * Return: int
- */
-int f_env(__attribute__((unused))char *arg)
+void f_env(char *var)
 {
-	char *evar;
-	int i;
-
-	for (i = 0; environ[i] != NULL; i++)
+	char *value = getenv(var);
+	if (value != NULL)
 	{
-		evar = environ[i];
-		printf("%s\n", evar);
+		printf("%s\n", value);
 	}
-	return (1);
+	else
+	{
+		printf("%s not found\n", var);
+	}
 }
