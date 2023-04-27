@@ -230,6 +230,7 @@ char *find_path(char *arg, char *path)
 	exit(1);
 }
 extern char **environ;
+
 void f_env(char *var)
 {
 	char *value = getenv(var);
