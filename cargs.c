@@ -16,7 +16,7 @@
 void f_env(char *var);
 char *find_path(char *arg, char *path);
 int my_strcmp(const char *s1, const char *s2);
-
+extern char **environ;
 int main(int argc, char **argv, char **envp)
 {
 	char *args[1024];
@@ -74,6 +74,15 @@ int main(int argc, char **argv, char **envp)
 
 		if (my_strcmp(temp, "exit") == 0)
 			break;
+		if (my_strcmp(temp, "env") == 0)
+		{
+			char **env = environ;
+			while (*env)
+			{
+				printf("%s\n", *env++);
+			}
+			continue;
+		}
 
 		commands = strtok(temp, ":");
 
