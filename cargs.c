@@ -13,7 +13,7 @@
  * Return: pointer to the full path
  */
 
-void f_env(char *var);
+void f_env(char **envp);
 char *find_path(char *arg, char *path);
 int my_strcmp(const char *s1, const char *s2);
 extern char **environ;
@@ -76,11 +76,7 @@ int main(int argc, char **argv, char **envp)
 			break;
 		if (my_strcmp(temp, "env") == 0)
 		{
-			char **env = environ;
-			while (*env)
-			{
-				printf("%s\n", *env++);
-			}
+			f_env(environ);
 			continue;
 		}
 
@@ -214,7 +210,7 @@ char *find_path(char *arg, char *path)
 	}
 
 	dir = strtok(pcopy, ":");
-	while (dir != NULL)
+	while (dir)
 	{
 		fpath = malloc(strlen(dir) + strlen(arg) + 2);
 		if (fpath == NULL)
@@ -235,20 +231,14 @@ char *find_path(char *arg, char *path)
 		dir = strtok(NULL, ":");
 	}
 	free(pcopy);
-	fprintf(stderr, "%s: command not found\n", arg);
-	exit(1);
+	return (NULL);
 }
 extern char **environ;
 
-void f_env(char *var)
+void f_env(char **envp)
 {
-	char *value = getenv(var);
-	if (value != NULL)
+	while (*envp)
 	{
-		printf("%s\n", value);
-	}
-	else
-	{
-		printf("%s not found\n", var);
+		printf("%s\n", *envp++);
 	}
 }
