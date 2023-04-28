@@ -40,15 +40,15 @@ int main(int argc, char **argv, char **envp)
 
 	execve("/bin/sh", argv, envp);
 
-	perror("execve");	
-	
+	perror("execve");
+
 	if (argc > 1)
 	{
 		for (i = 1; i < argc && i < 1023; i++)
 		{
-			args[i -1] = argv[i];
+			args[i - 1] = argv[i];
 		}
-		args[i-1] = NULL;
+		args[i - 1] = NULL;
 	}
 
 	temp = (char *)malloc(len + 1);
@@ -91,7 +91,7 @@ int main(int argc, char **argv, char **envp)
 			tok = strtok(commands, " ");
 			i = 0;
 
-			while (tok!= NULL && i < 1023)
+			while (tok != NULL && i < 1023)
 			{
 				args[i++] = tok;
 				tok = strtok(NULL, " ");
@@ -145,7 +145,7 @@ int main(int argc, char **argv, char **envp)
 }
 
 /**
- * my_strcmp - comapres strings
+ * my_strcmp - comapares strings
  * @s1: pointer to first string
  * @s2: pointer to second string
  *
@@ -164,7 +164,11 @@ int my_strcmp(const char *s1, const char *s2)
 	}
 	return (*(const unsigned char *)s1 - *(const unsigned char *)s2);
 }
-
+/**
+ * _strdup - duplicates a string
+ * @str: string to be dupliated
+ * Return: string
+ */
 char *_strdup(char *str)
 {
 	int len = 0;
@@ -186,10 +190,16 @@ char *_strdup(char *str)
 
 	nstr[len] = '\0';
 
-	return(nstr);
+	return (nstr);
 }
 
 char *_strdup(char *str);
+/**
+ * find_path - fids a path
+ * @arg: pointer to argument passed
+ * @path: pointer to the path
+ * Return: pointer to path found
+ */
 char *find_path(char *arg, char *path)
 {
 	char *fpath = NULL;
@@ -220,7 +230,6 @@ char *find_path(char *arg, char *path)
 			free(pcopy);
 			return (fpath);
 		}
-	
 
 		free(fpath);
 		dir = strtok(NULL, ":");
@@ -230,6 +239,7 @@ char *find_path(char *arg, char *path)
 	exit(1);
 }
 extern char **environ;
+
 void f_env(char *var)
 {
 	char *value = getenv(var);
